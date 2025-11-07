@@ -2,57 +2,62 @@ package br.ufrn.library;
 
 // 1. Importa os Modelos
 import br.ufrn.library.model.Book;
+import br.ufrn.library.model.Loan;
 import br.ufrn.library.model.User;
 
 // 2. Importa as Exceções
 import br.ufrn.library.exception.BookNotFoundException;
+import br.ufrn.library.exception.NoCopiesAvailableException;
+import br.ufrn.library.exception.UserNotFoundException;
 
 // 3. Importa os Repositórios (Interfaces e Implementações)
 import br.ufrn.library.repository.BookRepository;
+import br.ufrn.library.repository.LoanRepository;
 import br.ufrn.library.repository.UserRepository;
 import br.ufrn.library.repository.impl.InMemoryBookRepository;
+import br.ufrn.library.repository.impl.InMemoryLoanRepository;
 import br.ufrn.library.repository.impl.InMemoryUserRepository;
 
 // 4. Importa os Serviços
 import br.ufrn.library.service.BookService;
+import br.ufrn.library.service.LoanService;
 import br.ufrn.library.service.UserService;
+
+import java.util.List;
 
 public class Library {
 
     public static void main(String[] args) {
-        
+
         // --- FASE 1: CONFIGURAÇÃO E INJEÇÃO DE DEPENDÊNCIA ---
         System.out.println("Iniciando o sistema da biblioteca...");
 
         // 1. Cria os "Trabalhadores" (Repositórios - Implementações)
         UserRepository userRepo = new InMemoryUserRepository();
-        BookRepository bookRepo = new InMemoryBookRepository(); // <-- ATUALIZADO
-        //LoanRepository loanRepo = new InMemoryLoanRepository(); // Feito pelo Colega 2
+        BookRepository bookRepo = new InMemoryBookRepository();
+        LoanRepository loanRepo = new InMemoryLoanRepository();
 
         // 2. Cria os "Cérebros" (Serviços)
         UserService userService = new UserService(userRepo);
-        BookService bookService = new BookService(bookRepo); // <-- ATUALIZADO
-        
-        // O serviço pra empréstimos é criado (depende de todos)
-        //LoanService loanService = new LoanService(loanRepo, userRepo, bookRepo);
+        BookService bookService = new BookService(bookRepo);
+        LoanService loanService = new LoanService(loanRepo, bookRepo, userRepo);
 
         System.out.println("Sistema pronto. Serviços configurados.");
-        
-        
+
         // --- FASE 2: USO DA APLICAÇÃO (A UI) ---
-        
+
         // --- Teste do UserService (código original) ---
         System.out.println("\n--- Testando UserService ---");
         try {
             System.out.println("Cadastrando usuário Joadson...");
             userService.registerUser("12345", "Joadson");
-            
+
             System.out.println("Cadastrando usuário Paulo...");
             userService.registerUser("67890", "Paulo");
 
             System.out.println("Usuários cadastrados:");
             System.out.println(userService.listAllUsers());
-            
+
             System.out.println("Buscando usuário Joadson:");
             User joadson = userService.findUserById("12345");
             System.out.println("Encontrado: " + joadson.getName());
@@ -101,16 +106,84 @@ public class Library {
             System.err.println("ERRO (Esperado no teste de não encontrado): " + e.getMessage());
         }
 
-        // --- Aqui o Colega 2 usaria o LoanService ---
-        /*
+        // --- Testando LoanService (Sistema de Empréstimo) ---
+        System.out.println("\n--- Testando LoanService ---");
         try {
-            System.out.println("Realizando empréstimo...");
-            // O loanService usa o 'userService' e 'bookService' por baixo dos panos
-            loanService.performLoan("12345", "978-1"); // Emprestando O Senhor dos Anéis para Joadson
-            
+            // 1. Criar empréstimo
+            System.out.println("Realizando empréstimo do livro '978-1' para o usuário Joadson...");
+            Loan loan1 = loanService.createLoan("12345", "978-1");
+            System.out.println("Empréstimo criado: " + loan1.getId());
+            System.out.println("  -> Usuário: " + loan1.getUser().getName());
+            System.out.println("  -> Livro: " + loan1.getBook().getTitle());
+            System.out.println("  -> Data do empréstimo: " + loan1.getLoanDate());
+            System.out.println("  -> Data de devolução: " + loan1.getDueDate());
+
+            // 2. Criar mais um empréstimo
+            System.out.println("\nRealizando empréstimo do livro '978-1' para o usuário Paulo...");
+            Loan loan2 = loanService.createLoan("67890", "978-1");
+            System.out.println("Empréstimo criado: " + loan2.getId());
+
+            // 3. Listar empréstimos ativos
+            System.out.println("\nListando todos os empréstimos ativos:");
+            List<Loan> activeLoans = loanService.getAllActiveLoans();
+            for (Loan loan : activeLoans) {
+                System.out.println("  -> Empréstimo " + loan.getId() +
+                        " | Usuário: " + loan.getUser().getName() +
+                        " | Livro: " + loan.getBook().getTitle());
+            }
+
+            // 4. Listar empréstimos de um usuário específico
+            System.out.println("\nListando empréstimos do usuário Joadson:");
+            List<Loan> joadsonLoans = loanService.getLoansByUser("12345");
+            System.out.println("  -> Total de empréstimos: " + joadsonLoans.size());
+
+            // 5. Devolver um livro
+            System.out.println("\nDevolvendo o livro do empréstimo " + loan1.getId() + "...");
+            loanService.returnLoan(loan1.getId());
+            System.out.println("Livro devolvido com sucesso!");
+            System.out.println("  -> Status do empréstimo: " + (loan1.isReturned() ? "Devolvido" : "Ativo"));
+
+            // 6. Listar empréstimos ativos após devolução
+            System.out.println("\nListando empréstimos ativos após devolução:");
+            activeLoans = loanService.getAllActiveLoans();
+            System.out.println("  -> Total de empréstimos ativos: " + activeLoans.size());
+
+            // 7. Verificar se um empréstimo está atrasado
+            System.out.println("\nVerificando se o empréstimo " + loan2.getId() + " está atrasado:");
+            boolean isOverdue = loanService.isLoanOverdue(loan2.getId());
+            System.out.println("  -> Está atrasado? " + (isOverdue ? "Sim" : "Não"));
+
+            // 8. Teste de erro - Usuário não encontrado
+            System.out.println("\nTentando criar empréstimo para usuário inexistente (deve falhar)...");
+            loanService.createLoan("USUARIO_INVALIDO", "978-1");
+
+        } catch (UserNotFoundException e) {
+            System.err.println("ERRO (Esperado - Usuário não encontrado): " + e.getMessage());
+        } catch (BookNotFoundException e) {
+            System.err.println("ERRO (Esperado - Livro não encontrado): " + e.getMessage());
+        } catch (NoCopiesAvailableException e) {
+            System.err.println("ERRO (Esperado - Sem cópias disponíveis): " + e.getMessage());
         } catch (Exception e) {
-             System.err.println("ERRO no Empréstimo: " + e.getMessage());
+            System.err.println("ERRO no Sistema de Empréstimo: " + e.getMessage());
         }
-        */
+
+        // 9. Teste de erro - Livro sem cópias disponíveis
+        try {
+            System.out.println("\nTentando emprestar todas as cópias disponíveis e depois mais uma (deve falhar)...");
+            // Emprestar as 3 cópias restantes do livro 978-1 (já foram emprestadas 2,
+            // restam 3)
+            loanService.createLoan("12345", "978-1");
+            loanService.createLoan("67890", "978-1");
+            loanService.createLoan("12345", "978-1");
+            // Tentar emprestar mais uma cópia (não há mais disponível)
+            loanService.createLoan("67890", "978-1");
+
+        } catch (NoCopiesAvailableException e) {
+            System.err.println("ERRO (Esperado - Sem cópias disponíveis): " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+
+        System.out.println("\n--- Sistema finalizado ---");
     }
 }
