@@ -12,7 +12,8 @@ import br.ufrn.library.repository.LoanRepository;
 
 /**
  * Implementação em memória do LoanRepository.
- * Esta classe lida com o como salvar dados de empréstimo, usando um Map em memória.
+ * Esta classe lida com o como salvar dados de empréstimo, usando um Map em
+ * memória.
  * Implementa o contrato definido na interface LoanRepository.
  */
 public class InMemoryLoanRepository implements LoanRepository {
