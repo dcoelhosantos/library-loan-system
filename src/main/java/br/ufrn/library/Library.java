@@ -1,9 +1,20 @@
 package br.ufrn.library;
 
-// 1. Importa os Modelos (se necessário para criar instâncias de teste)
+// 1. Importa os Modelos
+import br.ufrn.library.model.Book;
 import br.ufrn.library.model.User;
+
+// 2. Importa as Exceções
+import br.ufrn.library.exception.BookNotFoundException;
+
+// 3. Importa os Repositórios (Interfaces e Implementações)
+import br.ufrn.library.repository.BookRepository;
 import br.ufrn.library.repository.UserRepository;
+import br.ufrn.library.repository.impl.InMemoryBookRepository;
 import br.ufrn.library.repository.impl.InMemoryUserRepository;
+
+// 4. Importa os Serviços
+import br.ufrn.library.service.BookService;
 import br.ufrn.library.service.UserService;
 
 public class Library {
@@ -11,25 +22,16 @@ public class Library {
     public static void main(String[] args) {
         
         // --- FASE 1: CONFIGURAÇÃO E INJEÇÃO DE DEPENDÊNCIA ---
-        // Aqui é "Em alguma classe Main ou de Configuração"
-        
         System.out.println("Iniciando o sistema da biblioteca...");
 
         // 1. Cria os "Trabalhadores" (Repositórios - Implementações)
-        // Cada um de vocês instancia o "trabalhador" que criou.
         UserRepository userRepo = new InMemoryUserRepository();
-        //BookRepository bookRepo = new InMemoryBookRepository(); // Feito pelo Colega 1
+        BookRepository bookRepo = new InMemoryBookRepository(); // <-- ATUALIZADO
         //LoanRepository loanRepo = new InMemoryLoanRepository(); // Feito pelo Colega 2
 
         // 2. Cria os "Cérebros" (Serviços)
-        // E injeta os "trabalhadores" (via construtor) neles.
-        // Note que os serviços só conhecem as INTERFACES.
-        
-        // O SEU serviço é criado
         UserService userService = new UserService(userRepo);
-        
-        // O serviço pra livros é criado
-        //BookService bookService = new BookService(bookRepo);
+        BookService bookService = new BookService(bookRepo); // <-- ATUALIZADO
         
         // O serviço pra empréstimos é criado (depende de todos)
         //LoanService loanService = new LoanService(loanRepo, userRepo, bookRepo);
@@ -38,15 +40,9 @@ public class Library {
         
         
         // --- FASE 2: USO DA APLICAÇÃO (A UI) ---
-        // A partir deste ponto, SÓ usamos as variáveis de SERVIÇO
-        // (userService, bookService, loanService)
-        // NUNCA mais usamos os "Repos" diretamente.
         
-        System.out.println("\n--- Exemplo de Uso (UI de Console) ---");
-
-        // --- Como seu colega usará o que você fez ---
-        // Ele vai simplesmente chamar métodos no 'userService'.
-        
+        // --- Teste do UserService (código original) ---
+        System.out.println("\n--- Testando UserService ---");
         try {
             System.out.println("Cadastrando usuário Joadson...");
             userService.registerUser("12345", "Joadson");
@@ -65,16 +61,52 @@ public class Library {
             System.err.println("ERRO: " + e.getMessage());
         }
 
+        // --- ATUALIZADO: Teste do BookService ---
+        System.out.println("\n--- Testando BookService ---");
+        try {
+            // 1. Cadastro
+            System.out.println("Cadastrando Livro Físico (ISBN 978-1)...");
+            bookService.registerPhysicalBook("O Senhor dos Anéis", "J.R.R. Tolkien", "978-1", 5);
+
+            System.out.println("Cadastrando Livro Digital (ISBN 123-456)...");
+            bookService.registerDigitalBook("Duna", "Frank Herbert", "123-456");
+            System.out.println("Livros cadastrados!");
+
+            // 2. Listagem
+            System.out.println("Listando todos os livros:");
+            for (Book book : bookService.listAllBooks()) {
+                System.out.println("  -> " + book.getTitle() + " (ISBN: " + book.getIsbn() + ")");
+            }
+
+            // 3. Atualização
+            System.out.println("Atualizando 'Duna' para 'Duna (Ed. Especial)'...");
+            bookService.updateDigitalBook("123-456", "Duna (Ed. Especial)", "Frank Herbert");
+            Book duna = bookService.findBookByIsbn("123-456");
+            System.out.println("Busca após atualização: " + duna.getTitle());
+
+            // 4. Teste de Erro (Duplicado)
+            System.out.println("Tentando cadastrar ISBN 978-1 de novo (deve falhar)...");
+            bookService.registerPhysicalBook("Outro Livro", "Outro Autor", "978-1", 1);
+
+        } catch (BookNotFoundException | IllegalArgumentException e) {
+            // Pega erros de validação (como o duplicado)
+            System.err.println("ERRO (Esperado no teste de duplicado): " + e.getMessage());
+        }
+
+        // 5. Teste de Erro (Não Encontrado)
+        try {
+            System.out.println("Tentando buscar ISBN '999' (deve falhar)...");
+            bookService.findBookByIsbn("999");
+        } catch (BookNotFoundException e) {
+            System.err.println("ERRO (Esperado no teste de não encontrado): " + e.getMessage());
+        }
+
         // --- Aqui o Colega 2 usaria o LoanService ---
-        // (Exemplo de como ele usaria a sua parte e a do outro colega)
         /*
         try {
-            // (O Colega 1 cadastraria um livro primeiro)
-            // bookService.registerNewBook(...)
-        
             System.out.println("Realizando empréstimo...");
             // O loanService usa o 'userService' e 'bookService' por baixo dos panos
-            loanService.performLoan("12345", "978-0321125217");
+            loanService.performLoan("12345", "978-1"); // Emprestando O Senhor dos Anéis para Joadson
             
         } catch (Exception e) {
              System.err.println("ERRO no Empréstimo: " + e.getMessage());
