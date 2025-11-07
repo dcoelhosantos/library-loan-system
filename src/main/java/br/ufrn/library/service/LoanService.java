@@ -1,5 +1,5 @@
 package br.ufrn.library.service;
 
-public class LibraryService {
+public class LoanService {
     
 }
