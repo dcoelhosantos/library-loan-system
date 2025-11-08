@@ -1,29 +1,23 @@
 package br.ufrn.library;
 
 // 1. Importa os Modelos
-import br.ufrn.library.model.Book;
-import br.ufrn.library.model.Loan;
-import br.ufrn.library.model.User;
+import java.util.List;
 
-// 2. Importa as Exceções
 import br.ufrn.library.exception.BookNotFoundException;
 import br.ufrn.library.exception.NoCopiesAvailableException;
 import br.ufrn.library.exception.UserNotFoundException;
-
-// 3. Importa os Repositórios (Interfaces e Implementações)
+import br.ufrn.library.model.Book;
+import br.ufrn.library.model.Loan;
+import br.ufrn.library.model.User;
 import br.ufrn.library.repository.BookRepository;
 import br.ufrn.library.repository.LoanRepository;
 import br.ufrn.library.repository.UserRepository;
 import br.ufrn.library.repository.impl.InMemoryBookRepository;
 import br.ufrn.library.repository.impl.InMemoryLoanRepository;
 import br.ufrn.library.repository.impl.InMemoryUserRepository;
-
-// 4. Importa os Serviços
 import br.ufrn.library.service.BookService;
 import br.ufrn.library.service.LoanService;
 import br.ufrn.library.service.UserService;
-
-import java.util.List;
 
 public class Library {
 

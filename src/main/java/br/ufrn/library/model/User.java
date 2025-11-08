@@ -9,42 +9,45 @@ import java.util.List;
  */
 public class User {
 
-    private String id; // Unique ID (could be CPF, registration number, etc.)
+    private String id;
     private String name;
     private List<Loan> loanHistory;
 
     public User(String id, String name) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("User ID cannot be empty.");
+        }
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("User name cannot be empty.");
+        }
+        
         this.id = id;
         this.name = name;
-        this.loanHistory = new ArrayList<>(); // Starts with an empty history
+        this.loanHistory = new ArrayList<>();
     }
-
-    // --- Getters and Setters ---
-    // Note: We only provide getters for fields that should be read,
-    // and setters for fields that should be modified *after* creation.
 
     public String getId() {
         return id;
     }
+    
+    public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("User name cannot be empty.");
+        }
+        this.name = name;
+    }
 
-    // ID is usually immutable, so no setId() unless required
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public List<Loan> getLoanHistory() {
         return loanHistory;
     }
 
-    // The history is managed externally (by a Service),
-    // so we don't provide a public setLoanHistory().
-    // We can provide a helper method to add a loan,
-    // which will be called by the LoanService.
+    // The history is managed externally (by a Service, UserService),
     public void addLoanToHistory(Loan loan) {
         this.loanHistory.add(loan);
     }
