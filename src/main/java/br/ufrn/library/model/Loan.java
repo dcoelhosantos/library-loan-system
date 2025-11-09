@@ -8,17 +8,25 @@ import java.time.LocalDate;
  */
 public class Loan {
 
-    private String id; // Unique loan ID
-    private User user; // The user who borrowed the book
-    private Book book; // The book that was borrowed
-    private LocalDate loanDate; // Date when the loan was made
-    private LocalDate dueDate; // Date when the book should be returned
+    private final String id; // Unique loan ID
+    private final User user; // The user who borrowed the book
+    private final Book book; // The book that was borrowed
+    private final LocalDate loanDate; // Date when the loan was made
+    private final LocalDate dueDate; // Date when the book should be returned
     private LocalDate returnDate; // Date when the book was actually returned (null if not returned yet)
     private boolean isReturned; // Status of the loan
 
-    /**
+    /**inal String id;
+    private final User user;
+    private final Book book;
+    private final LocalDate loanDate;
+    private fi
      * Constructor for creating a new loan.
-     * 
+     * inal String id;
+    private final User user;
+    private final Book book;
+    private final LocalDate loanDate;
+    private fi
      * @param id The unique identifier for this loan
      * @param user The user borrowing the book
      * @param book The book being borrowed

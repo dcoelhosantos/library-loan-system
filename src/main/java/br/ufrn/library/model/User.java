@@ -1,11 +1,12 @@
 package br.ufrn.library.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class User {
 
-    private String id;
+    private final String id;
     private String name;
     private List<Loan> loanHistory;
 
@@ -33,14 +34,12 @@ public class User {
         this.name = name;
     }
 
-
     public String getName() {
         return name;
     }
 
-
     public List<Loan> getLoanHistory() {
-        return loanHistory;
+        return Collections.unmodifiableList(loanHistory);
     }
 
     public void addLoanToHistory(Loan loan) {
