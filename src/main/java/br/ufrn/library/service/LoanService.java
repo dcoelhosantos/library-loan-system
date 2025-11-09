@@ -2,7 +2,6 @@ package br.ufrn.library.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,8 +64,8 @@ public class LoanService {
      * @throws NoCopiesAvailableException Se não houver cópias disponíveis para
      *                                    empréstimo
      */
-    public Loan createLoan(String userId, String isbn) {
-        return createLoan(userId, isbn, LocalDate.now(), DEFAULT_LOAN_PERIOD_DAYS);
+    public Loan createLoan(String loanId, String userId, String isbn) {
+        return createLoan(loanId, userId, isbn, LocalDate.now(), DEFAULT_LOAN_PERIOD_DAYS);
     }
 
     /**
@@ -82,7 +81,7 @@ public class LoanService {
      * @throws NoCopiesAvailableException Se não houver cópias disponíveis para
      *                                    empréstimo
      */
-    public Loan createLoan(String userId, String isbn, LocalDate loanDate, int loanPeriodDays) {
+    public Loan createLoan(String loanId, String userId, String isbn, LocalDate loanDate, int loanPeriodDays) {
         if (userId == null || userId.trim().isEmpty()) {
             throw new IllegalArgumentException("ID do usuário não pode ser nulo ou vazio.");
         }
@@ -113,7 +112,6 @@ public class LoanService {
         LocalDate dueDate = loanDate.plusDays(loanPeriodDays);
 
         // 5. Cria o empréstimo
-        String loanId = generateLoanId();
         Loan loan = new Loan(loanId, user, book, loanDate, dueDate);
 
         // 6. Registra o empréstimo no livro
@@ -332,12 +330,4 @@ public class LoanService {
         return loan.isOverdue(LocalDate.now());
     }
 
-    /**
-     * Gera um ID único para o empréstimo.
-     * 
-     * @return Um ID único para o empréstimo
-     */
-    private String generateLoanId() {
-        return "LOAN-" + UUID.randomUUID().toString();
-    }
 }

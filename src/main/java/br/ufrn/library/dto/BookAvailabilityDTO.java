@@ -35,13 +35,4 @@ public class BookAvailabilityDTO {
     public String getAuthor() { return author; }
     public String getType() { return type; }
     public String getAvailability() { return availability; }
-
-    @Override
-    public String toString() {
-        return "BookAvailabilityDTO{" +
-                "title='" + title + '\'' +
-                ", type='" + type + '\'' +
-                ", availability='" + availability + '\'' +
-                '}';
-    }
 }
