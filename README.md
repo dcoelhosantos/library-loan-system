@@ -46,17 +46,14 @@ Utilizamos uma arquitetura em três camadas principais:
 #### 2. Repository (`/repository`)
 
 * Responsável pela **abstração da persistência** dos dados.
-* **Boa Prática (Inversão de Dependência - 'D' do SOLID):** Usamos **Interfaces** (Ex: `UserRepository`) para definir o "contrato" (o que fazer) e
-* classes de **Implementação** (Ex: `InMemoryUserRepository`) para definir o "trabalhador" (como fazer).
-* Isso desacopla totalmente a lógica de negócio da forma de armazenamento. Poderíamos trocar o `Map` em memória por um banco de dados SQL real
-* sem alterar **nenhuma linha** nas camadas de serviço.
+* **Boa Prática (Inversão de Dependência - 'D' do SOLID):** Usamos **Interfaces** (Ex: `UserRepository`) para definir o "contrato" (o que fazer) e classes de **Implementação** (Ex: `InMemoryUserRepository`) para definir o "trabalhador" (como fazer).
+* Isso desacopla totalmente a lógica de negócio da forma de armazenamento. Poderíamos trocar o `Map` em memória por um banco de dados SQL real sem alterar **nenhuma linha** nas camadas de serviço.
 
 #### 3. Service (`/service`)
 
 * O **cérebro** da aplicação. Contém toda a lógica de negócio (Ex: `LoanService` verifica se um livro está disponível antes de pedir ao repositório para salvar um `Loan`).
 * **Boa Prática (Injeção de Dependência):** Os Serviços dependem apenas das *interfaces* dos repositórios, que são "injetadas" em seus construtores (Injeção via Construtor).
-* **Boa Prática (Responsabilidade Única - 'S' do SOLID):** Cada serviço tem uma responsabilidade clara (`UserService` cuida da lógica de usuário, `BookService` da de livros,
-* e `LoanService` orquestra as operações entre eles).
+* **Boa Prática (Responsabilidade Única - 'S' do SOLID):** Cada serviço tem uma responsabilidade clara (`UserService` cuida da lógica de usuário, `BookService` da de livros, e `LoanService` orquestra as operações entre eles).
 
 ---
 
