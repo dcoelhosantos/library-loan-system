@@ -2,7 +2,6 @@
 
 ![Java](https://img.shields.io/badge/Java-21-blue?logo=java)
 ![Maven](https://img.shields.io/badge/Maven-3.8%2B-red?logo=apachemaven)
-![JUnit 5](https://img.shields.io/badge/JUnit-5-green?logo=junit)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 Projeto da disciplina de Boas Práticas de Programação. O objetivo é criar um sistema de gerenciamento de empréstimos de biblioteca,
@@ -66,10 +65,11 @@ Utilizamos uma arquitetura em camadas principais:
 
 * Classes "burras" usadas para **transferir dados** formatados ou agregados para a camada de visualização (Ex: `BookAvailabilityDTO`, `LoanReportDTO`), mantendo os relatórios limpos.
 
-#### 5. View (CLI) (`Library.java`)
+#### 5. View (CLI) (`/cli` e `Library.java`)
 
-* A classe principal (`Library.java`) atua como nossa camada de **Visualização (View)**.
-* **Responsabilidade:** Apenas exibir o menu, capturar a entrada do usuário e formatar a saída dos DTOs no console.
+* A camada de **Visualização (View)** é composta pela classe `Library.java` (o "dispatcher" principal) e as classes no pacote `/cli`.
+* **Boa Prática (Responsabilidade Única - 'S' do SOLID):** A lógica de interação com o console foi separada em classes `*ConsoleHandler` (Ex: `BookConsoleHandler`, `LoanConsoleHandler`).
+* A `Library.java` é responsável apenas por inicializar o sistema e despachar as ações, enquanto os `Handlers` são responsáveis por coletar a entrada do usuário e formatar a saída.
 
 ---
 
