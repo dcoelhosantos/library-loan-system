@@ -3,10 +3,6 @@ package br.ufrn.library.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represents a User in the library system.
- * This is a data class (POJO) and holds no business logic.
- */
 public class User {
 
     private String id;
@@ -47,12 +43,9 @@ public class User {
         return loanHistory;
     }
 
-    // The history is managed externally (by a Service, UserService),
     public void addLoanToHistory(Loan loan) {
         this.loanHistory.add(loan);
     }
-
-    // --- Object methods ---
     
     @Override
     public String toString() {
