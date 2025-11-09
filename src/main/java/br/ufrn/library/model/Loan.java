@@ -2,37 +2,16 @@ package br.ufrn.library.model;
 
 import java.time.LocalDate;
 
-/**
- * Represents a Loan in the library system.
- * This is a data class (POJO) that holds loan information.
- */
 public class Loan {
 
-    private final String id; // Unique loan ID
-    private final User user; // The user who borrowed the book
-    private final Book book; // The book that was borrowed
-    private final LocalDate loanDate; // Date when the loan was made
-    private final LocalDate dueDate; // Date when the book should be returned
-    private LocalDate returnDate; // Date when the book was actually returned (null if not returned yet)
-    private boolean isReturned; // Status of the loan
+    private final String id; 
+    private final User user; 
+    private final Book book;
+    private final LocalDate loanDate;
+    private final LocalDate dueDate; 
+    private LocalDate returnDate; 
+    private boolean isReturned;
 
-    /**inal String id;
-    private final User user;
-    private final Book book;
-    private final LocalDate loanDate;
-    private fi
-     * Constructor for creating a new loan.
-     * inal String id;
-    private final User user;
-    private final Book book;
-    private final LocalDate loanDate;
-    private fi
-     * @param id The unique identifier for this loan
-     * @param user The user borrowing the book
-     * @param book The book being borrowed
-     * @param loanDate The date of the loan
-     * @param dueDate The date the book should be returned
-     */
     public Loan(String id, User user, Book book, LocalDate loanDate, LocalDate dueDate) {
         if (id == null || id.trim().isEmpty()) {
             throw new IllegalArgumentException("Loan ID cannot be null or empty.");
@@ -62,11 +41,6 @@ public class Loan {
         this.isReturned = false;
     }
 
-    /**
-     * Marks the loan as returned.
-     * 
-     * @param returnDate The date when the book was returned
-     */
     public void markAsReturned(LocalDate returnDate) {
         if (returnDate == null) {
             throw new IllegalArgumentException("Return date cannot be null.");
@@ -82,12 +56,6 @@ public class Loan {
         this.isReturned = true;
     }
 
-    /**
-     * Checks if the loan is overdue based on the current date.
-     * 
-     * @param currentDate The date to check against
-     * @return true if the loan is overdue and not yet returned
-     */
     public boolean isOverdue(LocalDate currentDate) {
         if (currentDate == null) {
             throw new IllegalArgumentException("Current date cannot be null.");
@@ -95,50 +63,19 @@ public class Loan {
         return !isReturned && currentDate.isAfter(dueDate);
     }
 
-    // --- Getters ---
+    public String getId() { return id; }
 
-    public String getId() {
-        return id;
-    }
+    public User getUser() { return user; }
 
-    public User getUser() {
-        return user;
-    }
+    public Book getBook() { return book; }
 
-    public Book getBook() {
-        return book;
-    }
+    public LocalDate getLoanDate() { return loanDate; }
 
-    public LocalDate getLoanDate() {
-        return loanDate;
-    }
+    public LocalDate getDueDate() { return dueDate; }
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
+    public LocalDate getReturnDate() { return returnDate; }
 
-    public LocalDate getReturnDate() {
-        return returnDate;
-    }
-
-    public boolean isReturned() {
-        return isReturned;
-    }
-
-    // --- Object methods ---
-
-    @Override
-    public String toString() {
-        return "Loan{" +
-                "id='" + id + '\'' +
-                ", user=" + user.getName() +
-                ", book=" + book.getTitle() +
-                ", loanDate=" + loanDate +
-                ", dueDate=" + dueDate +
-                ", returnDate=" + returnDate +
-                ", isReturned=" + isReturned +
-                '}';
-    }
+    public boolean isReturned() { return isReturned; }
 
     @Override
     public boolean equals(Object o) {

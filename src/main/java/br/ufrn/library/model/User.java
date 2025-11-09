@@ -23,10 +23,6 @@ public class User {
         this.loanHistory = new ArrayList<>();
     }
 
-    public String getId() {
-        return id;
-    }
-    
     public void setName(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("User name cannot be empty.");
@@ -34,25 +30,16 @@ public class User {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public List<Loan> getLoanHistory() {
-        return Collections.unmodifiableList(loanHistory);
-    }
-
     public void addLoanToHistory(Loan loan) {
         this.loanHistory.add(loan);
     }
+
+    public String getId() { return id; }
     
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", loans=" + loanHistory.size() +
-                '}';
+    public String getName() { return name; }
+
+    public List<Loan> getLoanHistory() {
+        return Collections.unmodifiableList(loanHistory);
     }
 
     @Override

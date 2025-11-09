@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap; // <-- CORRIGIDO
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import br.ufrn.library.model.Loan;
@@ -17,7 +17,6 @@ public class InMemoryLoanRepository implements LoanRepository {
     @Override
     public Loan save(Loan loan) {
         if (loan == null) {
-            // Esta validação é boa, pois 'put' falharia com valor nulo
             throw new IllegalArgumentException("Loan cannot be null.");
         }
         database.put(loan.getId(), loan);
