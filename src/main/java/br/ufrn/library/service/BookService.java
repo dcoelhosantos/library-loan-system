@@ -1,12 +1,14 @@
 package br.ufrn.library.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import br.ufrn.library.exception.BookNotFoundException; 
 import br.ufrn.library.model.Book;
 import br.ufrn.library.model.DigitalBook;
 import br.ufrn.library.model.PhysicalBook;
 import br.ufrn.library.repository.BookRepository;
+import br.ufrn.library.dto.BookAvailabilityDTO;
 
 public class BookService {
 
@@ -62,6 +64,12 @@ public class BookService {
 
     public List<Book> listAllBooks() {
         return bookRepository.findAll();
+    }
+
+    public List<BookAvailabilityDTO> getBookAvailabilityReport() {
+        return bookRepository.findAll().stream()
+                .map(BookAvailabilityDTO::new)
+                .collect(Collectors.toList());
     }
     
     public void deleteBook(String isbn) {

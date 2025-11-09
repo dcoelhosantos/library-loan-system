@@ -3,6 +3,9 @@ package br.ufrn.library.service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import br.ufrn.library.exception.BookNotFoundException;
 import br.ufrn.library.exception.NoCopiesAvailableException;
@@ -13,6 +16,7 @@ import br.ufrn.library.model.User;
 import br.ufrn.library.repository.BookRepository;
 import br.ufrn.library.repository.LoanRepository;
 import br.ufrn.library.repository.UserRepository;
+import br.ufrn.library.dto.LoanReportDTO;
 
 /**
  * Camada de serviço para operações de Empréstimo.
@@ -282,6 +286,35 @@ public class LoanService {
         return activeLoans.stream()
                 .filter(loan -> loan.isOverdue(currentDate))
                 .toList();
+    }
+
+    public LoanReportDTO generateLoanReport() {
+        
+        // 1. Pega todos os empréstimos
+        List<Loan> allLoans = loanRepository.findAll();
+
+        // 2. Calcula o total (Requisito 6.b)
+        long totalLoanCount = allLoans.size();
+
+        // 3. Agrupa os empréstimos por livro e conta
+        Map<Book, Long> loansPerBook = allLoans.stream()
+                .collect(Collectors.groupingBy(
+                        Loan::getBook, 
+                        Collectors.counting()
+                ));
+
+        // 4. Ordena o mapa por contagem (valor), em ordem decrescente (Requisito 6.a)
+        Map<Book, Long> sortedLoansPerBook = loansPerBook.entrySet().stream()
+                .sorted(Map.Entry.<Book, Long>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey, 
+                        Map.Entry::getValue, 
+                        (e1, e2) -> e1, 
+                        LinkedHashMap::new
+                ));
+        
+        // 5. Retorna o DTO
+        return new LoanReportDTO(totalLoanCount, sortedLoansPerBook);
     }
 
     /**
