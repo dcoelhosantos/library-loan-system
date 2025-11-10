@@ -16,7 +16,7 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Book save(Book book) {
         database.put(book.getIsbn(), book);
-        return book; // Retorna o objeto salvo
+        return book;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class InMemoryBookRepository implements BookRepository {
     public boolean deleteByIsbn(String isbn) {
         return database.remove(isbn) != null;
     }
-    
+
     @Override
     public boolean existsByIsbn(String isbn) {
         return database.containsKey(isbn);

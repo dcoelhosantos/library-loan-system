@@ -30,7 +30,6 @@ public class InMemoryLoanRepository implements LoanRepository {
 
     @Override
     public List<Loan> findAll() {
-        // Boa prática: Cópia defensiva
         return new ArrayList<>(database.values());
     }
 

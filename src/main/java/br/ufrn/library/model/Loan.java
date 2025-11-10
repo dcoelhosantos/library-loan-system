@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 public class Loan {
 
-    private final String id; 
-    private final User user; 
-    private final Book book;
-    private final LocalDate loanDate;
-    private final LocalDate dueDate; 
-    private LocalDate returnDate; 
+    private String id;
+    private User user;
+    private Book book;
+    private LocalDate loanDate;
+    private LocalDate dueDate;
+    private LocalDate returnDate;
     private boolean isReturned;
 
     public Loan(String id, User user, Book book, LocalDate loanDate, LocalDate dueDate) {
@@ -63,24 +63,53 @@ public class Loan {
         return !isReturned && currentDate.isAfter(dueDate);
     }
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-    public User getUser() { return user; }
+    public User getUser() {
+        return user;
+    }
 
-    public Book getBook() { return book; }
+    public Book getBook() {
+        return book;
+    }
 
-    public LocalDate getLoanDate() { return loanDate; }
+    public LocalDate getLoanDate() {
+        return loanDate;
+    }
 
-    public LocalDate getDueDate() { return dueDate; }
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
 
-    public LocalDate getReturnDate() { return returnDate; }
+    public LocalDate getReturnDate() {
+        return returnDate;
+    }
 
-    public boolean isReturned() { return isReturned; }
+    public boolean isReturned() {
+        return isReturned;
+    }
+
+    @Override
+    public String toString() {
+        return "Loan{" +
+                "id='" + id + '\'' +
+                ", userId='" + (user != null ? user.getId() : "null") + '\'' +
+                ", bookIsbn='" + (book != null ? book.getIsbn() : "null") + '\'' +
+                ", loanDate=" + loanDate +
+                ", dueDate=" + dueDate +
+                ", returnDate=" + returnDate +
+                ", isReturned=" + isReturned +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Loan loan = (Loan) o;
         return id.equals(loan.id);
     }
