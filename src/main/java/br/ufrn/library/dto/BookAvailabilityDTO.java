@@ -18,21 +18,34 @@ public class BookAvailabilityDTO {
         this.author = book.getAuthor();
 
         if (book instanceof PhysicalBook physicalBook) {
-            this.type = "Physical";
+            this.type = "Físico";
             this.availability = physicalBook.getAvailableCopies() + " / " + physicalBook.getTotalCopies();
         } else if (book instanceof DigitalBook) {
             this.type = "Digital";
-            this.availability = "Always Available";
+            this.availability = "Sempre disponível";
         } else {
             this.type = "Unknown";
             this.availability = "N/A";
         }
     }
 
+    public String getIsbn() {
+        return isbn;
+    }
 
-    public String getIsbn() { return isbn; }
-    public String getTitle() { return title; }
-    public String getAuthor() { return author; }
-    public String getType() { return type; }
-    public String getAvailability() { return availability; }
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
 }

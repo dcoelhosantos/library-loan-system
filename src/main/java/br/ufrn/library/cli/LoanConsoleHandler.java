@@ -7,7 +7,6 @@ import br.ufrn.library.dto.LoanReportDTO;
 import br.ufrn.library.model.Loan;
 import br.ufrn.library.service.LoanService;
 
-
 public class LoanConsoleHandler {
 
     private final LoanService loanService;
@@ -17,7 +16,7 @@ public class LoanConsoleHandler {
         this.loanService = loanService;
         this.scanner = scanner;
     }
-    
+
     public void handleCreateLoan() {
         System.out.println("\n--- 3. Realizar Empréstimo ---");
         System.out.print("ID do Empréstimo: ");
@@ -26,7 +25,7 @@ public class LoanConsoleHandler {
         String userId = scanner.nextLine();
         System.out.print("ISBN do Livro: ");
         String isbn = scanner.nextLine();
-        
+
         loanService.createLoan(loanId, userId, isbn);
         System.out.println("Empréstimo realizado com sucesso!");
     }
@@ -35,7 +34,7 @@ public class LoanConsoleHandler {
         System.out.println("\n--- 4. Realizar Devolução ---");
         System.out.print("ID do Empréstimo: ");
         String loanId = scanner.nextLine();
-        
+
         loanService.returnLoan(loanId, LocalDate.now());
         System.out.println("Devolução registrada com sucesso!");
     }
@@ -59,7 +58,7 @@ public class LoanConsoleHandler {
     }
 
     public void handleLoanReport() {
-        System.out.println("\n--- 6. Relatório de Empréstimos ---");
+        System.out.println("\n--- 8. Relatório de Empréstimos ---");
         LoanReportDTO report = loanService.generateLoanReport();
 
         System.out.println("Total de Empréstimos no Sistema: " + report.getTotalLoans());

@@ -22,20 +22,20 @@ public class UserConsoleHandler {
         String id = scanner.nextLine();
         System.out.print("Nome: ");
         String name = scanner.nextLine();
-        
+
         userService.registerUser(id, name);
         System.out.println("Usuário cadastrado com sucesso!");
     }
-    
+
     public void handleListAllUsers() {
-        System.out.println("\n--- 7. Listar Usuários Cadastrados ---");
+        System.out.println("\n--- 6. Listar Usuários Cadastrados ---");
         List<User> users = userService.listAllUsers();
 
         if (users.isEmpty()) {
             System.out.println("Nenhum usuário cadastrado.");
             return;
         }
-        
+
         for (User user : users) {
             System.out.printf("  -> ID: %s | Nome: %s | Empréstimos no Histórico: %d\n",
                     user.getId(),
@@ -43,5 +43,5 @@ public class UserConsoleHandler {
                     user.getLoanHistory().size());
         }
     }
-    
+
 }
